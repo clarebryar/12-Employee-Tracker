@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const db = require('./db');
   
 const choices =  [
     {
@@ -42,8 +43,22 @@ const choices =  [
   function startPrompts () {
    return inquirer.prompt (choices)
     .then(res => {
-console.log(res)
+console.log(res);
+
+switch (res.choice) { 
+    case "view_all_departments":  
+    viewDepartments();
+    break;
+}
     })
   }  
+
+  function viewDepartments() {
+    db.departments()
+    .then(([data]) => {
+        console.table(data);
+    });
+
+  }
 
   startPrompts();
