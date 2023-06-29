@@ -32,8 +32,9 @@ employees () {
         "SELECT employee.id, employee.first_name, employee.last_name, employee.role_id FROM employee");
 }
 
-addDepartment() {
-  
+addDept(dept) {
+  return this.connection.promise().query(
+    "INSERT INTO department SET ? ", dept);
 }
 
 }

@@ -22,6 +22,7 @@ const choices =  [
             {
                 name: "Add a department", 
                 value: "Add_a_department",  
+                    
             },
             {
                 name: "Add a role", 
@@ -54,6 +55,8 @@ switch (res.choice) {
     break;
     case "view_all_employees":
     viewEmployees();
+    case "Add_a_department": 
+    addADepartment();
 }
     })
   }  
@@ -80,4 +83,19 @@ switch (res.choice) {
     });
   }
 
+function addADepartment () {    
+    inquirer.prompt() ([
+        {
+            name: "name",
+            message: "New Department name",
+            type: "input"
+
+        }
+    ]) 
+    db.addDept(res)
+    .then(([res]) => {
+        console.table(res)
+    }
+)
+}
   startPrompts();
