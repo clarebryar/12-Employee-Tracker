@@ -49,6 +49,11 @@ switch (res.choice) {
     case "view_all_departments":  
     viewDepartments();
     break;
+    case "view_all_roles":
+    viewRoles()
+    break;
+    case "view_all_employees":
+    viewEmployees();
 }
     })
   }  
@@ -59,6 +64,20 @@ switch (res.choice) {
         console.table(data);
     });
 
+  }
+
+  function viewRoles() {
+    db.roles()
+    .then(([data]) => {
+        console.table(data);
+    });
+  }
+
+  function viewEmployees() {
+    db.employees()
+    .then(([data]) => {
+        console.table(data);
+    });
   }
 
   startPrompts();

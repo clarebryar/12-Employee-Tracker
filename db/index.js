@@ -23,6 +23,19 @@ departments () {
         "SELECT department.id, department.name FROM department;");
 }
 
+roles () {
+    return this.connection.promise().query(
+        "SELECT role.id, role.title, role.salary, role.department_id FROM role");
+}
+employees () {
+    return this.connection.promise().query(
+        "SELECT employee.id, employee.first_name, employee.last_name, employee.role_id FROM employee");
+}
+
+addDepartment() {
+  
+}
+
 }
 
  
