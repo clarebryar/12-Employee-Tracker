@@ -55,8 +55,14 @@ switch (res.choice) {
     break;
     case "view_all_employees":
     viewEmployees();
+    break;
     case "Add_a_department": 
-    addADepartment();
+    newADepartment();
+    break;
+    case "Add_a_role":
+        newRole();
+    break;
+
 }
     })
   }  
@@ -65,7 +71,8 @@ switch (res.choice) {
     db.departments()
     .then(([data]) => {
         console.table(data);
-    });
+    })
+    .then(() => startPrompts()) ;
 
   }
 
@@ -73,29 +80,71 @@ switch (res.choice) {
     db.roles()
     .then(([data]) => {
         console.table(data);
-    });
+    })
+    .then(() => startPrompts()) ;
   }
 
   function viewEmployees() {
     db.employees()
     .then(([data]) => {
         console.table(data);
-    });
+    })
+    .then(() => startPrompts()) ;
   }
 
-function addADepartment () {    
-    inquirer.prompt() ([
+function newADepartment () {    
+    inquirer.prompt([
         {
+            type: "input",
             name: "name",
             message: "New Department name",
-            type: "input"
 
         }
     ]) 
-    db.addDept(res)
-    .then(([res]) => {
+   
+    .then(res => {
+        db.addDept(res)
         console.table(res)
-    }
-)
+    } 
+    )
+    .then(() => startPrompts()) ;
+}
+
+function newRole () {
+    db.departments() 
+    .then (([data]) => {
+        const departments = data.map(({id, name}) => ({
+            name: name,
+            value: id,
+        }))
+    
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "New Role Title",
+
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "New Role Salary",
+
+        },
+        {
+            type: "list",
+            name: "department_id",
+            message: "New Role's Department",
+            choices: departments
+
+        }
+    ]) 
+    .then(res => {
+        db.addRole(res)
+        console.table(res)
+    })
+    .then(() => startPrompts()) ;
+});
 }
   startPrompts();

@@ -25,16 +25,26 @@ departments () {
 
 roles () {
     return this.connection.promise().query(
-        "SELECT role.id, role.title, role.salary, role.department_id FROM role");
+        "SELECT role.id, role.title,  department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id");
 }
 employees () {
     return this.connection.promise().query(
-        "SELECT employee.id, employee.first_name, employee.last_name, employee.role_id FROM employee");
+        "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.salary, employee.manager_id, employee.role_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on department_id = department.id");
 }
 
 addDept(dept) {
   return this.connection.promise().query(
     "INSERT INTO department SET ? ", dept);
+}
+
+addRole(role) {
+  return this.connection.promise().query(
+    "INSERT INTO role, SET ?", role);
+  
+}
+
+addEmployee(employee) {
+  
 }
 
 }
