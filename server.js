@@ -61,6 +61,9 @@ function startPrompts() {
       case "Add_an_employee":
         newEmployee();
         break;
+      case "Update_an_employee_role":
+        updateEmployeeRole();
+        break;
     }
   });
 }
@@ -117,39 +120,36 @@ function newEmployee() {
         name: "last_name",
         message: "Employee's last name:",
       },
-    ]) 
+    ])
     .then((res) => {
       const firstName = res.first_name;
       const lastName = res.last_name;
-      db.roles()
-        .then(([roles]) =>{
-            const dbRoles = roles.map(({ id, title }) => ({
-                name: title,
-                value: id
-            }));
-            inquirer.prompt({
-            
-                type:"list",
-                name: "role",
-                message:"Choose the Employees role:",
-                choices:dbRoles
-              
-            })
-            .then(res => {
-                const roleChoice = res.role
-                const employee = {
-                    first_name: firstName,
-                    last_name: lastName,
-                    role_id: roleChoice
-                }
-                db.addEmployee(employee)
-           
-            .then(() => console.table(employee))
-            .then(() => startPrompts());
-        })
-        })
-    })
+      db.roles().then(([roles]) => {
+        const dbRoles = roles.map(({ id, title }) => ({
+          name: title,
+          value: id,
+        }));
+        inquirer
+          .prompt({
+            type: "list",
+            name: "role",
+            message: "Choose the Employees role:",
+            choices: dbRoles,
+          })
+          .then((res) => {
+            const roleChoice = res.role;
+            const employee = {
+              first_name: firstName,
+              last_name: lastName,
+              role_id: roleChoice,
+            };
+            db.addEmployee(employee)
 
+              .then(() => console.table(employee))
+              .then(() => startPrompts());
+          });
+      });
+    });
 }
 
 function newRole() {
@@ -186,21 +186,47 @@ function newRole() {
   });
 }
 
-function updateEmployeeRole {
-    
-    db.employees()
-    .then(([data]) => {
-        const employees = data;
-        const employeeOptions = employees.map(({ id, first_name, last_name }) => ({
-            name: `${first_name} ${last_name}`,
-            value: id
-        })
-        
-        )
-    })
-    inquirer.prompt() {
-        
-    }
+function updateEmployeeRole() {
+  db.employees()
+  .then(([data]) => {
+    let employees = data;
+    const employeeOptions = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id,
+    }));
+  inquirer.prompt([
+        {
+          type: "list",
+          name: "employeeId",
+          message: "Which employee needs to be updated?",
+          choices: employeeOptions,
+        }
+      ])
+      .then((res) => {
+        let employeeChoice = res.employeeId;
+        db.roles().then(([data]) => {
+          let roles = data;
+          const roleOptions = roles.map(({ id, title }) => ({
+            name: title,
+            value: id,
+          }));
+          inquirer.prompt([
+            {
+              type: "list",
+              name: "roleId",
+              message: "Which role would you like to update for this employee?",
+              choices: roleOptions,
+            },
+          ])
+            .then((res) => {
+                const roleChoice = res.roleId
+              db.updateEmployee(employeeChoice, roleChoice);
+            })
+            .then(() => console.log(res.roleChoice, employeeChoice))
+            .then(() => startPrompts());
+        });
+      });
+  });
 }
 
 startPrompts();

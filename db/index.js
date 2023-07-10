@@ -48,6 +48,12 @@ addEmployee(employee) {
     "INSERT INTO employee SET ? ", employee);
 }
 
+updateEmployee(employee, role) {
+  return this.connection.promise().query(
+    "INSERT INTO employee SET role_id = ? WHERE id = ?", role, employee
+  )
+}
+
 }
 
  
