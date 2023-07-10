@@ -179,10 +179,10 @@ function newRole() {
         },
       ])
       .then((res) => {
-        db.addRole(res);
-        console.table(res);
-      })
-      .then(() => startPrompts());
+        db.addRole(res)
+        .then(() => console.table(res))
+        .then(() => startPrompts());
+    })
   });
 }
 
@@ -220,7 +220,7 @@ function updateEmployeeRole() {
           ])
             .then((res) => {
                 const roleChoice = res.roleId
-              db.updateEmployee(employeeChoice, roleChoice);
+              db.updateEmployee(employeeChoice, roleChoice)
             })
             .then(() => console.log(res.roleChoice, employeeChoice))
             .then(() => startPrompts());
